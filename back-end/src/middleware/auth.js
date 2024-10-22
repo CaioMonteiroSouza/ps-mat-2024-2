@@ -11,7 +11,7 @@ import jwt from 'jsonwebtoken'
 */
 const bypassRoutes = [
   { url: '/users/login', method: 'POST' },
-  { url: '/keep-alive', method: 'GET'}
+  { url: '/keep-alive', method: 'GET' }
 ]
 
 export default function(req, res, next) {

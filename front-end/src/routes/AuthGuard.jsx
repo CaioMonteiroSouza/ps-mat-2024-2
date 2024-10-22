@@ -7,7 +7,7 @@ import useWaiting from '../ui/useWaiting'
 export default function AuthGuard({ children }) {
 
   const { setAuthUser, authUser, setRedirectLocation } = React.useContext(AuthUserContext)
-  const { status, setStatus } = React.useState('IDLE')
+  const [status, setStatus] = React.useState('IDLE')
 
   const location = useLocation()
   const { showWaiting, Waiting } = useWaiting()

@@ -15,6 +15,8 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+// O model Car tem duas relações com o model User. Isso exige que demos um
+// nome distinto a cada uma delas no descritor @relation.
 model Car {
   id                Int           @id @default(autoincrement())
   brand             String        // Marca do carro
@@ -27,6 +29,12 @@ model Car {
   selling_price     Decimal?      // Preço de venda; preenchimento opcional 
   customer_id       Int?
   customer          Customer?     @relation(fields: [customer_id], references: [id])
+  created_user_id   Int           @default(1)
+  updated_user_id   Int            @default(1)
+  created_user      User          @relation("created_user", fields: [created_user_id], references: [id])
+  updated_user      User          @relation("updated_user", fields: [updated_user_id], references: [id])
+  created_at        DateTime      @default(now())
+  updated_at        DateTime      @updatedAt  @default(now())
 }
 
 model Customer {
@@ -45,6 +53,8 @@ model Customer {
   cars              Car[]         // Carros adquiridos pelo cliente
 }
 
+// O model User tem duas relações com o model Car. Isso exige que o descritor
+// @relation seja informado, contendo um nome distinto para cada relação.
 model User {
   id                Int           @id @default(autoincrement())
   fullname          String        // Nome completo
@@ -52,6 +62,8 @@ model User {
   email             String        @unique
   password          String
   is_admin          Boolean       @default(false)
+  created_cars      Car[]         @relation("created_user")
+  updated_cars      Car[]         @relation("updated_user")
 }
 
 
