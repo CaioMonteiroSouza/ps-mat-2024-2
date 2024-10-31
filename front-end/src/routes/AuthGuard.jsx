@@ -3,8 +3,10 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import myfetch from '../lib/myfetch'
 import AuthUserContext from '../contexts/AuthUserContext'
 import useWaiting from '../ui/useWaiting'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 
-export default function AuthGuard({ children }) {
+export default function AuthGuard({ children, adminOnly = false }) {
 
   const { setAuthUser, authUser, setRedirectLocation } = React.useContext(AuthUserContext)
   const [status, setStatus] = React.useState('IDLE')
@@ -43,6 +45,17 @@ export default function AuthGuard({ children }) {
   // exibimos um componente Waiting
   if(status === 'PROCESSING') return <Waiting />
 
-  return authUser ? children : <Navigate to="/login" replace />
+  if(authUser) {
+    if(adminOnly && authUser.is_admin) return children
+    else if (adminOnly && !(authUser.is_admin)) return (
+      <Box>
+        <Typography variant="h2" color="error">
+          Acesso negado
+        </Typography>
+      </Box>
+    )
+    else return children
+  }
+  else return <Navigate to="/login" replace />
   
 }

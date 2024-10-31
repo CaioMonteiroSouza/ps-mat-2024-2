@@ -35,10 +35,10 @@ export default function AppRoutes() {
     <Route path="/customers/:id" element={ <AuthGuard> <CustomerForm />  </AuthGuard> } />
 
     <Route path="/users" element={ 
-      <AuthGuard> <UserList /> </AuthGuard> 
+      <AuthGuard adminOnly> <UserList /> </AuthGuard> 
     } />
-    <Route path="/users/new" element={ <AuthGuard> <UserForm /> </AuthGuard> } />
-    <Route path="/users/:id" element={ <AuthGuard> <UserForm /> </AuthGuard> } />
+    <Route path="/users/new" element={ <AuthGuard adminOnly> <UserForm /> </AuthGuard> } />
+    <Route path="/users/:id" element={ <AuthGuard adminOnly> <UserForm /> </AuthGuard> } />
 
     {/* 11. Crie uma rota para esse componente. */}
     <Route path="/about" element={ <About /> } />

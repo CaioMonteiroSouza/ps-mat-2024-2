@@ -58,7 +58,38 @@ export default function UserForm() {
   async function handleFormSubmit(event) {
     event.preventDefault(); // Evita que a página seja recarregada
     showWaiting(true); // Exibe a tela de espera
+
     try {
+
+      // Limpa as mensagens de erro
+      setState({ ...state, inputErrors: {} })
+
+      // Validação dos campos de senha e e-mail
+      if(user.email !== user.confirm_email) {
+        const msg = 'A confirmação do e-mail não coincide com o e-mail.'
+        const inputErrorsCopy = { ...inputErrors, confirm_email: msg }
+        setState({ ...state, inputErrors: inputErrorsCopy })
+        throw new Error(msg)
+      }
+
+      // A validação da senha e da validação da senha somente será
+      // processada se os respectivos campos estiverem visíveis
+      if(showPasswordFields && user.password !== user.confirm_password) {
+        const msg = 'A confirmação da senha não coincide com a senha.'
+        const inputErrorsCopy = { ...inputErrors, confirm_password: msg }
+        setState({ ...state, inputErrors: inputErrorsCopy })
+        throw new Error(msg)
+      }
+
+      // Apaga os campos de confirmação do objeto que será enviado
+      // ao back-end
+      delete user.confirm_email
+      delete user.confirm_password
+
+      // Se os campos de senha não estiverem visíveis, apaga também
+      // o campo password do objeto que será enviado ao back-end
+      if(! showPasswordFields) delete user.password
+
       // Se houver parâmetro na rota, significa que estamos modificando
       // um usuário já existente. A requisição será enviada ao back-end
       // usando o método PUT
@@ -101,6 +132,8 @@ export default function UserForm() {
       // ser editado
       if(params.id) {
         user = await myfetch.get(`/users/${params.id}`)
+        // Iniciamos o campo confirm_email com o mesmo valor de email
+        user.confirm_email = user.email
       }
 
       /* Se não houver parâmetro na rota, significa que estamos
@@ -233,7 +266,7 @@ export default function UserForm() {
               name="password"
               label="Senha"
               variant="filled"
-              required
+              required={showPasswordFields}
               fullWidth
               type="password"
               value={user.password}
@@ -248,7 +281,7 @@ export default function UserForm() {
               name="confirm_password"
               label="Confirme a senha"
               variant="filled"
-              required
+              required={showPasswordFields}
               fullWidth
               type="password"
               value={user.confirm_password}
@@ -273,9 +306,9 @@ export default function UserForm() {
             </Button>
           </Box>
 
-          {<Box sx={{ fontFamily: 'monospace', display: 'flex', width: '100%' }}>
+          {/*<Box sx={{ fontFamily: 'monospace', display: 'flex', width: '100%' }}>
             {JSON.stringify(user)}
-          </Box>}
+          </Box>*/}
         </form>
       </Box>
     </>

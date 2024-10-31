@@ -29,7 +29,7 @@ app.use('/', indexRouter)
 
 // Middleware de verificação de autorização
 import authMiddleware from './middleware/auth.js'
-app.use(authMiddleware)
+//app.use(authMiddleware)
 
 import carsRouter from './routes/cars.js'
 app.use('/cars', carsRouter)

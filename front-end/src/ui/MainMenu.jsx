@@ -18,46 +18,58 @@ export default function MainMenu() {
 
   const { authUser } = React.useContext(AuthUserContext)
 
+  /*
+    authLevel para o menu principal:
+    * Nível 0: o menu é sempre exibido, independentemente de haver
+               usuário autenticado
+    * Nível 1: o menu será exibido apenas se houver usuário autenticado
+    * Nível 2: o menu será exibido apenas se o usuário autenticado for
+    *          administrador       
+  */
+
   const menuItems = [
     {
       children: 'Página inicial',
       to: '/',
-      divider: true
+      divider: true,
+      authLevel: 0
     },
     {
       children: 'Listagem de veículos',
       to: '/cars',
       divider: false,
-      requiresAuth: true
+      authLevel: 1
     },
     {
       children: 'Cadastro de veículos',
       to: '/cars/new',
       divider: true,
-      requiresAuth: true
+      authLevel: 1
     },
     {
       children: 'Listagem de clientes',
       to: '/customers',
       divider: false,
-      requiresAuth: true
+      authLevel: 1
     },
     {
       children: 'Cadastro de clientes',
       to: '/customers/new',
       divider: true,
-      requiresAuth: true
+      authLevel: 1
     },
     {
       children: 'Cadastro de usuários',
       to: '/users',
       divider: true,
-      requiresAuth: true
+      // Item do menu só aparece se o usuário logado for administrador
+      authLevel: 2
     },
     {
       children: 'Sobre o autor',
       to: '/about',
-      divider: false
+      divider: false,
+      authLevel: 0
     },
   ]
 
@@ -87,7 +99,11 @@ export default function MainMenu() {
       >
         {
           menuItems.map(item => {
-            if(!(item?.requiresAuth) || (item?.requiresAuth && authUser)) {
+            if(
+              (item.authLevel === 0) ||
+              (item.authLevel === 1 && authUser) ||
+              (item.authLevel === 2 && authUser?.is_admin)
+            ) {
               return <MenuItem 
                 key={item.to} 
                 onClick={handleClose} 

@@ -357,11 +357,11 @@ export default function CustomerForm() {
             </Button>
           </Box>
 
-          {<Box sx={{ fontFamily: 'monospace', display: 'flex', flexDirection: 'column', width: '100%' }}>
+          {/*<Box sx={{ fontFamily: 'monospace', display: 'flex', flexDirection: 'column', width: '100%' }}>
             {JSON.stringify(customer)}
             <hr />
             {JSON.stringify(inputErrors)}
-          </Box>}
+          </Box>*/}
         
         </form>
       </Box>
