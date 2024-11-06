@@ -73,21 +73,27 @@ controller.retrieveOne = async function(req, res) {
 
 controller.update = async function(req, res) {
   try {
-    const result = await prisma.customer.update({
+    
+    // Chama a validação do Zod para o cliente
+    Customer.parse(req.body)
+
+    await prisma.customer.update({
       where: { id: Number(req.params.id) },
       data: req.body
     })
 
-    // Encontrou e atualizou ~> HTTP 204: No Content
-    if(result) res.status(204).end()
-    // Não encontrou (e não atualizou) ~> HTTP 404: Not Found
-    else res.status(404).end()
+    // HTTP 204: No Content
+    res.status(204).end()
   }
   catch(error) {
     console.error(error)
 
+    // Se for erro de validação do Zod retorna
+    // HTTP 422: Unprocessable Entity
+    if(error instanceof ZodError) res.status(422).send(error.issues)
+
     // HTTP 500: Internal Server Error
-    res.status(500).end()
+    else res.status(500).end()
   }
 }
 
