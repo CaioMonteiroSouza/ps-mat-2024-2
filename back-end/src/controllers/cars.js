@@ -39,7 +39,9 @@ controller.retrieveAll = async function(req, res) {
         { id: 'asc' }
       ],
       include: {
-        customer: includedRels.includes('customer')
+        customer: includedRels.includes('customer'),
+        created_user: includedRels.includes('created_user_id'),
+        updated_user: includedRels.includes('updated_user_id')
       }
     })
 
