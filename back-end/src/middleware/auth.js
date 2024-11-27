@@ -28,6 +28,7 @@ export default function(req, res, next) {
     }
   }
 
+
   /* PROCESSO DE VERIFICAÇÃO DO TOKEN DE AUTORIZAÇÃO */
   let token = null
 
